@@ -38,7 +38,7 @@ function AddonJenkins (app, server, io, passport){
     setInterval( function(){
       jenkins.computers(function(err, data) {
         if (err) { return console.log(err);  }
-        console.log('Got jenkins computers');
+        console.log('JENKINS: Got jenkins computers');
         global.pubsub.emit('jenkins.computers', data);
       });
     }, 10000);
@@ -47,7 +47,7 @@ function AddonJenkins (app, server, io, passport){
           if (err){ 
             return winston.error(err); 
           }
-          console.log('Got jenkins jobs');
+          console.log('JENKINS: Got jenkins jobs');
           global.pubsub.emit('jenkins.jobs', data);
         });
     }, 10000);
