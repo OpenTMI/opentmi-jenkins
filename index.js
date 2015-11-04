@@ -23,7 +23,7 @@ function AddonJenkins (app, server, io, passport){
           jenkins.all_jobs(function(err, data) {
             if (err){
               res.json(500, err); 
-              return winston.error(err); 
+              return winston.error("jenkins.all_jobs err: "+err); 
             }
             res.json(data)
           });
@@ -32,28 +32,32 @@ function AddonJenkins (app, server, io, passport){
           jenkins.computers(function(err, data) {
             if (err){
               res.json(500, err); 
-              return console.log(err); 
+              return winston.error("jenkins.computers err1: "+err)
             }
             res.json(data)
           });
         });
 
         // check all computers every 10 seconds
-        setInterval( function(){
+        var timerComputers = setInterval( function(){
           jenkins.computers(function(err, data) {
-            if (err) { return console.log(err);  }
-            console.log('JENKINS: Got jenkins computers');
+            if (err) { 
+                clearInterval(timerComputers);
+                return winston.error("jenkins.computers err2: "+err);  
+            }
+            //winston.log('JENKINS: Got jenkins computers');
             global.pubsub.emit('jenkins.computers', data);
           });
         }, 10000);
         
         // check all jobs every 10 seconds
         setInterval( function(){
-          jenkins.all_jobs(function(err, data) {
+          var timerAllJobs = jenkins.all_jobs(function(err, data) {
               if (err){ 
+                clearInterval(timerAllJobs);
                 return winston.error(err); 
               }
-              console.log('JENKINS: Got jenkins jobs');
+              //winston.log('JENKINS: Got jenkins jobs');
               global.pubsub.emit('jenkins.jobs', data);
             });
         }, 10000);
