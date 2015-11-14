@@ -1,6 +1,7 @@
 var jenkinsapi = require('jenkins-api');
 var winston = require('winston');
 var nconf = require('nconf');
+var _ = require('underscore');
 
 function AddonJenkins (app, server, io, passport){
 
@@ -18,6 +19,22 @@ function AddonJenkins (app, server, io, passport){
         }
         // initialize jenkins api
         var jenkins = jenkinsapi.init(cfg.url);
+
+        global.pubsub.emit('status.now.init', {
+          jenkins: {
+            master: {
+              alive: 0
+            },
+            slaves: { 
+              active: 0,
+              count: 0
+            },
+            jobs: {
+              count: 0,
+              active: 0   
+            }
+          }
+        });
         
         app.get('/api/v0/ci/jobs', function(req, res){
           jenkins.all_jobs(function(err, data) {
@@ -46,7 +63,17 @@ function AddonJenkins (app, server, io, passport){
                 return winston.error("jenkins.computers err2: "+err);  
             }
             //winston.log('JENKINS: Got jenkins computers');
-            global.pubsub.emit('jenkins.computers', data);
+            global.pubsub.emit('status.now', {
+              jenkins: {
+                slaves: {
+                  count: data.totalExecutors,
+                  active: data.busyExecutors
+                },
+                master: {
+                  alive: 1
+                }
+              }
+            });
           });
         }, 10000);
         
@@ -58,7 +85,21 @@ function AddonJenkins (app, server, io, passport){
                 return winston.error(err); 
               }
               //winston.log('JENKINS: Got jenkins jobs');
-              global.pubsub.emit('jenkins.jobs', data);
+              var jobsStatus = {
+                  count: data.length,
+                  active: 0,
+                  failure: 0
+              }
+              _.each(data, function(item) { 
+                if( item.color=='yellow') {
+                    jobsStatus.active++
+                }
+                if( item.color=='red') {
+                    jobsStatus.failure++
+                }
+              });
+              console.log("jenkins.jobs: "+JSON.stringify(jobsStatus));
+              global.pubsub.emit('status.now', { jenkins: { jobs: jobsStatus} } );
             });
         }, 10000);
 
