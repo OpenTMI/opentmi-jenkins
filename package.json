@@ -1,0 +1,35 @@
+{
+  "name": "tmt-jenkins",
+  "version": "0.1.0",
+  "description": "TMT jenkins addon",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.com/_tmt_/tmt-jenkins.git"
+  },
+  "keywords": [
+    "test",
+    "automation",
+    "management",
+    "jenkins"
+  ],
+  "author": "Jussi Vatjus-Anttila <jussiva@gmail.com>",
+  "license": "MIT",
+  "readmeFilename": "Readme.md",
+  "tmt": {
+    "id": "github",
+    "title": "Github",
+    "type": "provider",
+    "hosted": true,
+    "config": {
+      "controller": "JenkinsCtrl"
+    }
+  },
+  "devDependencies": {
+  },
+  "dependencies": {
+    "github": "*"
+  }
+}
