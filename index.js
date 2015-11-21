@@ -7,9 +7,7 @@ function AddonJenkins (app, server, io, passport){
 
     this.name = 'jenkins addon';
     this.description = 'Provide Jenkins integration';
-    this.listDependencies = ['jenkins-api'];
-  
-    var cfg = nconf.get('jenkins')
+    var cfg = nconf.get('jenkins');
     
     this.register = function(){
         
