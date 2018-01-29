@@ -1,10 +1,9 @@
 {
   "name": "opentmi-jenkins",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "OpenTMI jenkins addon",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/OpenTMI/opentmi-jenkins.git"
@@ -16,23 +15,21 @@
     "jenkins"
   ],
   "author": "Jussi Vatjus-Anttila <jussiva@gmail.com>",
-  "license": "GPLv3",
+  "license": "MIT",
   "readmeFilename": "README.md",
   "opentmi": {
     "id": "github",
-    "title": "Github",
+    "title": "Jenkins",
     "type": "provider",
     "hosted": true,
     "config": {
       "controller": "JenkinsCtrl"
     }
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "jenkins-api": "*",
-    "winston": "*",
-    "nconf": "*",
-    "underscore": "*"
+    "lodash": "*",
+    "opentmi-addon": "github:opentmi/opentmi-addon"
   }
 }
